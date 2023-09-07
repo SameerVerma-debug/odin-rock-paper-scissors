@@ -21,7 +21,7 @@ function game(e){
     tools.forEach((tool) => tool.removeEventListener('click'));
   }
 
-  let playerChoice = this.classList.value; //Name of Clicked Choice
+  let playerChoice = this.classList.value; 
   let computerChoice = getComputerChoice();
 
   if(playerChoice === computerChoice){
