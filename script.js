@@ -1,59 +1,58 @@
 function getComputerChoice(){
-  let choice = "";
-  const choices = ["rock","paper","scissors"];
-  let choiceNo = Math.floor(Math.random() * (2 - 0 + 1) ) + 0;
-
-  choice = choices[choiceNo];
+  const choices = ['rock','paper','scissors'];
+  let choice = choices[Math.floor(Math.random() * (2 - 0) + 0)];
   return choice;
 }
 
-function getPlayerChoice(){
-  let choice = "";
-  choice = prompt("Enter your choice: rock/paper/scissors");
-  choice = choice.toLowerCase();
-  return choice;
-}
-
-function game(){
-  let playerSelection = getPlayerChoice();
-  let computerSelection = getComputerChoice();
-  console.log("You Chose: "+playerSelection);
-  console.log("Computer Chose: "+computerSelection);
-
-  let result = "";
-  
-  if(playerSelection === computerSelection){
-      playerWinCount++;
-      computerWinCount++;
-      result = "Round tied";
+function game(e){
+  if(playerScore.textContent == '5' && computerScore.textContent == '5'){
+    roundWinner.textContent = 'GAME TIED! PLAY AGAIN?';
+    roundWinner.setAttribute('style','color:black; font-size:30px; font-weight:bolder; text-align:center;')
+    tools.forEach((tool) => tool.removeEventListener('click'));
   }
-  else if((playerSelection === "rock" && computerSelection === "scissors")
-          || (playerSelection === "paper" && computerSelection === "rock")
-          || (playerSelection === "scissors" && computerSelection === "paper")){
-      playerWinCount++;
-      result = "You won this round";
+  else if(playerScore.textContent == '5'){
+    roundWinner.textContent = 'YOU WON! PLAY AGAIN?';
+    roundWinner.setAttribute('style','color:black; font-size:30px; font-weight:bolder; text-align:center;')
+    tools.forEach((tool) => tool.removeEventListener('click'));
   }
-  else if((playerSelection === "rock" && computerSelection === "paper")
-  || (playerSelection === "paper" && computerSelection === "scissors")
-  || (playerSelection === "scissors" && computerSelection === "rock")){
-      computerWinCount++;
-      result = "You lost this round";
+  else if(computerScore.textContent == '5'){
+    roundWinner.textContent = 'COMPUTER WON! PLAY AGAIN?';
+    roundWinner.setAttribute('style','color:black; font-size:30px; font-weight:bolder; text-align:center;')
+    tools.forEach((tool) => tool.removeEventListener('click'));
   }
-  return result;
+
+  let playerChoice = this.classList.value; //Name of Clicked Choice
+  let computerChoice = getComputerChoice();
+
+  if(playerChoice === computerChoice){
+    playerScore.textContent = Number(playerScore.textContent) + 1;
+    computerScore.textContent = Number(computerScore.textContent) + 1;
+    roundWinner.textContent = `Round tied! (Computer Chose: ${computerChoice})`;
+  }
+  else if((playerChoice === "rock" && computerChoice === "scissors")
+  || (playerChoice === "paper" && computerChoice === "rock")
+  || (playerChoice === "scissors" && computerChoice === "paper")){
+    playerScore.textContent = Number(playerScore.textContent) + 1;
+    roundWinner.textContent = `You won this round! (Computer Chose: ${computerChoice})`;
+  }
+  else if((playerChoice === "rock" && computerChoice === "paper")
+  || (playerChoice === "paper" && computerChoice === "scissors")
+  || (playerChoice === "scissors" && computerChoice === "rock")){
+    computerScore.textContent = Number(computerScore.textContent) + 1;
+    roundWinner.textContent = `Computer Won this round! (Computer Chose: ${computerChoice})`;
+  }
 }
 
-let playerWinCount = 0;
-let computerWinCount = 0;
-for(let i = 0 ; i<5 ; i++){
-  console.log(game());
+function reset(){
+  roundWinner.textContent = "Start Game";
+  playerScore.textContent = '0';
+  computerScore.textContent = '0';
 }
 
-if(playerWinCount>computerWinCount){
-  console.log("You Won the game!");
-}
-else if(computerWinCount>playerWinCount){
-  console.log("You lost the game!");
-}
-else{
-  console.log("Game Tied!");
-}
+const tools = document.querySelectorAll('.options-buttons button');
+tools.forEach((tool) => tool.addEventListener('click',game));
+const playerScore = document.querySelector('.human-score');
+const computerScore = document.querySelector('.robot-score');
+const roundWinner = document.querySelector('.round-winner');
+const resetGame = document.querySelector('.reset-game-button');
+resetGame.addEventListener('click',reset);
